@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Rabbit AI Call</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #121f2a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .circle-button {
+      width: 150px;
+      height: 150px;
+      background-color: #76ff7a;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 20px #76ff7a;
+      transition: transform 0.2s ease;
+    }
+
+    .circle-button.talking {
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 20px #76ff7a; }
+      50% { box-shadow: 0 0 40px #76ff7a; }
+      100% { box-shadow: 0 0 20px #76ff7a; }
+    }
+
+    #mic-status {
+      margin-top: 20px;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <button id="mic-button" class="circle-button"></button>
+  <div id="mic-status">Start a call</div>
+
+  <!-- Hidden ElevenLabs Widget -->
+  <elevenlabs-convai id="elevenlabs-agent" agent-id="EacQrJKXcHIe8BWKVc8k"></elevenlabs-convai>
+  <script src="https://elevenlabs.io/convai-widget/index.js"></script>
+
+  <script>
+    const button = document.getElementById("mic-button");
+    const status = document.getElementById("mic-status");
+
+    let isCalling = false;
+
+    const waitForConvai = setInterval(() => {
+      if (window.convai && typeof convai.callAgent === "function") {
+        clearInterval(waitForConvai);
+
+        button.addEventListener("click", () => {
+          if (!isCalling) {
+            convai.callAgent();
+            status.textContent = "End the call";
+            button.classList.add("talking");
+            isCalling = true;
+          } else {
+            convai.hangUpAgent();
+            status.textContent = "Start a call";
+            button.classList.remove("talking");
+            isCalling = false;
+          }
+        });
+      }
+    }, 200);
+  </script>
+</body>
+</html>
