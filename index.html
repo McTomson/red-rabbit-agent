@@ -3,65 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Red Rabbit AI</title>
+  <title>Red Rabbit AI Agent</title>
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
-      background: #1a2a38;
-      color: white;
+      padding: 0;
+      height: 100vh;
+      background: #0f1a22;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      font-family: sans-serif;
+      color: white;
     }
     #mic-button {
       width: 200px;
       height: 200px;
-      background: #7CFC00;
+      background-color: #78ff78;
       border-radius: 50%;
       border: none;
+      box-shadow: 0 0 30px #78ff78;
       cursor: pointer;
-      box-shadow: 0 0 30px #7CFC00;
     }
     #mic-status {
       margin-top: 20px;
       font-size: 24px;
     }
+    /* Verstecke das Standard-Widget */
     elevenlabs-convai {
       display: none !important;
     }
   </style>
 </head>
 <body>
+
   <button id="mic-button"></button>
   <div id="mic-status">Start a call</div>
 
-  <!-- Verstecktes Widget -->
+  <!-- Hidden ElevenLabs Widget -->
   <elevenlabs-convai agent-id="EacQrJKXcHIe8BWKVc8k"></elevenlabs-convai>
-  <script src="https://elevenlabs.io/convai-widget/index.js" defer></script>
+
+  <script src="https://elevenlabs.io/convai-widget/index.js" async></script>
 
   <script>
-    let isCalling = false;
+    let isActive = false;
 
-    const button = document.getElementById("mic-button");
-    const status = document.getElementById("mic-status");
+    // Warte, bis das ElevenLabs Widget vollständig geladen ist
+    window.addEventListener('elevenlabs-ready', () => {
+      console.log('ElevenLabs Widget ready ✅');
 
-    button.addEventListener("click", () => {
-      const convai = document.querySelector("elevenlabs-convai");
-      if (!convai) return;
+      const micButton = document.getElementById('mic-button');
+      const micStatus = document.getElementById('mic-status');
 
-      if (!isCalling) {
-        convai.start();
-        status.innerText = "End the call";
-      } else {
-        convai.stop();
-        status.innerText = "Start a call";
-      }
-
-      isCalling = !isCalling;
+      micButton.addEventListener('click', () => {
+        if (!isActive) {
+          convai.start();
+          micStatus.textContent = 'End the call';
+          isActive = true;
+        } else {
+          convai.stop();
+          micStatus.textContent = 'Start a call';
+          isActive = false;
+        }
+      });
     });
   </script>
+
 </body>
 </html>
