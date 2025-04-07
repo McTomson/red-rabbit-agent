@@ -1,89 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Red Rabbit AI Call</title>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@11labs/elevenlabs-convai@0.0.5"></script>
-  <style>
-    body {
-      background-color: #101d2e;
-      color: white;
-      font-family: 'Helvetica Neue', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    #callButton {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background-color: #7dff77;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 40px #7dff77;
-      transition: all 0.3s ease;
-    }
-
-    #callButton:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 60px #7dff77;
-    }
-
-    #buttonText {
-      margin-top: 20px;
-    }
-
-    /* Verstecktes Widget mit minimaler Größe */
-    elevenlabs-convai {
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
-  </style>
-</head>
-<body>
-  <div id="callButton">
-    <span id="buttonText">Start a call</span>
-  </div>
-
-  <elevenlabs-convai
-    agent-id="EacQrJKXcHIe8BWKVc8k"
-    style="--elevenlabs-convai-primary-color: #7dff77;">
-  </elevenlabs-convai>
-
-  <script>
-    const button = document.getElementById('callButton');
-    const text = document.getElementById('buttonText');
-    let isCalling = false;
-
-    button.addEventListener('click', () => {
-      if (!window.convai || typeof convai.start !== 'function') {
-        console.error('❌ convai not ready yet.');
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <title>Red Rabbit Agent</title>
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        background: #0f1a22;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: sans-serif;
+        color: white;
+        flex-direction: column;
       }
 
-      if (!isCalling) {
-        convai.start();
-        text.textContent = "End the call";
-      } else {
-        convai.stop();
-        text.textContent = "Start a call";
+      #circle {
+        width: 200px;
+        height: 200px;
+        background-color: #7fff7f;
+        border-radius: 50%;
+        box-shadow: 0 0 60px #7fff7f;
+        margin-bottom: 20px;
+        cursor: pointer;
       }
-      isCalling = !isCalling;
-    });
-  </script>
-</body>
+    </style>
+  </head>
+  <body>
+    <div id="circle"></div>
+    <div>Start a call</div>
+
+    <script>
+      const script = document.createElement("script");
+      script.src = "https://cdn.elevenlabs.io/widget/elevenlabs-widget.js";
+      script.onload = () => {
+        const agent = new window.ElevenLabsWidget.Agent({
+          agentId: "EacQrJKXcHIe8BWKVc8k",
+          // Optional: Language, voice, etc.
+        });
+
+        document.getElementById("circle").addEventListener("click", () => {
+          agent.toggle(); // Startet oder beendet den Call
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
 </html>
